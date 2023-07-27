@@ -7,7 +7,7 @@ public interface PostService {
 
     PostDto createPost(PostDto postDto);
 
-    PostResponse findAll(int pageNumber, int pageSize);
+    PostResponse findAll(int pageNumber, int pageSize, String sortBy);
 
     PostDto findById(long id);
 

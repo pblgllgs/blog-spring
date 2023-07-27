@@ -25,9 +25,10 @@ public class PostController {
     @GetMapping()
     public ResponseEntity<PostResponse> findAll(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy
     ) {
-        return new ResponseEntity<>(postService.findAll(pageNumber, pageSize), HttpStatus.OK);
+        return new ResponseEntity<>(postService.findAll(pageNumber, pageSize, sortBy), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
