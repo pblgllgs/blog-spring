@@ -30,8 +30,11 @@ public class PostServiceImpl implements PostService {
         return mapToDto(newPost);
     }
 
-    public PostResponse findAll(int pageNumber, int pageSize, String sortBy) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+    public PostResponse findAll(int pageNumber, int pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Post> posts = postRepository.findAll(pageable);
         List<Post> listOfPost = posts.getContent();
         List<PostDto> content = listOfPost.stream().map(PostServiceImpl::mapToDto).collect(Collectors.toList());
