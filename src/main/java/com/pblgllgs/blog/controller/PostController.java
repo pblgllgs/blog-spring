@@ -3,8 +3,10 @@ package com.pblgllgs.blog.controller;
 import com.pblgllgs.blog.payload.PostDto;
 import com.pblgllgs.blog.payload.PostResponse;
 import com.pblgllgs.blog.service.impl.PostService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,11 +23,14 @@ public class PostController {
         this.postService = postService;
     }
 
+    @ApiOperation(value = "Create Post REST API")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
         return new ResponseEntity<>(postService.createPost(postDto), HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Get All Posts REST API")
     @GetMapping()
     public ResponseEntity<PostResponse> findAll(
             @RequestParam(value = "pageNumber", defaultValue = DEFAULT_PAGE_NUMBER, required = false) int pageNumber,
@@ -36,16 +41,21 @@ public class PostController {
         return new ResponseEntity<>(postService.findAll(pageNumber, pageSize, sortBy, sortDir), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Get Post By Id REST API")
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> findById(@PathVariable("id") long id) {
         return new ResponseEntity<>(postService.findById(id), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Update Post By Id REST API")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<PostDto> updateById(@Valid @RequestBody PostDto postDto, @PathVariable("id") long id) {
         return new ResponseEntity<>(postService.update(postDto, id), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Delete Post By Id REST API")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable("id") long id) {
         postService.deleteById(id);
