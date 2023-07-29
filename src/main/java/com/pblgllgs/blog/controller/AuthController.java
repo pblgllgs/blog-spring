@@ -10,7 +10,6 @@ import com.pblgllgs.blog.repository.UserRepository;
 import com.pblgllgs.blog.security.JwtTokenProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,28 +25,31 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Collections;
 
-@Api(value = "Auth controller exposes siginin and signup REST APIs")
+@Api(value = "Auth controller exposes signin and signup REST APIs")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private JwtTokenProvider tokenProvider;
+    private final JwtTokenProvider tokenProvider;
+
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider tokenProvider) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenProvider = tokenProvider;
+    }
 
     @ApiOperation(value = "REST API to Register or Signup user to Blog app")
-    @PostMapping("/signin")
+    @PostMapping("/v1/signin")
     public ResponseEntity<JWTAuthResponse> authenticateUser(@Valid @RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getUsernameOrEmail(), loginDto.getPassword()));
@@ -61,7 +63,7 @@ public class AuthController {
     }
 
     @ApiOperation(value = "REST API to Signin or Login user to Blog app")
-    @PostMapping("/signup")
+    @PostMapping("/v1/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpDto signUpDto) {
 
         // add check for username exists in a DB
@@ -81,7 +83,7 @@ public class AuthController {
         user.setEmail(signUpDto.getEmail());
         user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
 
-        Role roles = roleRepository.findByName("ROLE_ADMIN").get();
+        Role roles = roleRepository.findByName("ROLE_ADMIN").orElseThrow();
         user.setRoles(Collections.singleton(roles));
 
         userRepository.save(user);
