@@ -2,7 +2,6 @@ package com.pblgllgs.blog.config;
 
 import com.pblgllgs.blog.security.JwtAuthenticationEntryPoint;
 import com.pblgllgs.blog.security.JwtAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,8 +21,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationEntryPoint authenticationEntryPoint;
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
+
+    public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint) {
+        this.authenticationEntryPoint = authenticationEntryPoint;
+    }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {

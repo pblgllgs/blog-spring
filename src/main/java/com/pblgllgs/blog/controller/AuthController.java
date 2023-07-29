@@ -67,12 +67,12 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpDto signUpDto) {
 
         // add check for username exists in a DB
-        if (userRepository.existsByUsername(signUpDto.getUsername())) {
+        if (Boolean.TRUE.equals(userRepository.existsByUsername(signUpDto.getUsername()))) {
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
 
         // add check for email exists in DB
-        if (userRepository.existsByEmail(signUpDto.getEmail())) {
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(signUpDto.getEmail()))) {
             return new ResponseEntity<>("Email is already taken!", HttpStatus.BAD_REQUEST);
         }
 
