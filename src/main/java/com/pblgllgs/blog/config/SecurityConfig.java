@@ -49,7 +49,13 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         auth -> auth
-                                .antMatchers(HttpMethod.POST, "/api/auth/v1/**").permitAll()
+                                .antMatchers(HttpMethod.GET, "/api/post/v1/**").permitAll()
+                                .antMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                                .antMatchers("/v2/api-docs/**").permitAll()
+                                .antMatchers("/swagger-ui/**").permitAll()
+                                .antMatchers("/swagger-resources/**").permitAll()
+                                .antMatchers("/swagger-ui.html").permitAll()
+                                .antMatchers("/webjars/**").permitAll()
                                 .anyRequest().authenticated()
                 );
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

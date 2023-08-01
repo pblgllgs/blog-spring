@@ -47,8 +47,8 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
         this.tokenProvider = tokenProvider;
     }
-
-    @ApiOperation(value = "REST API to Register or Signup user to Blog app")
+    
+    @ApiOperation(value = "REST API to Signin or Login user to Blog app")
     @PostMapping("/v1/signin")
     public ResponseEntity<JWTAuthResponse> authenticateUser(@Valid @RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -62,7 +62,7 @@ public class AuthController {
         return ResponseEntity.ok(new JWTAuthResponse(token));
     }
 
-    @ApiOperation(value = "REST API to Signin or Login user to Blog app")
+    @ApiOperation(value = "REST API to Register or Signup user to Blog app")
     @PostMapping("/v1/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpDto signUpDto) {
 

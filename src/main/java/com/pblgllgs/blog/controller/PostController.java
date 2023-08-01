@@ -1,8 +1,6 @@
 package com.pblgllgs.blog.controller;
 
-import com.pblgllgs.blog.payload.CommentDto;
 import com.pblgllgs.blog.payload.PostDto;
-import com.pblgllgs.blog.payload.PostDtoV2;
 import com.pblgllgs.blog.payload.PostResponse;
 import com.pblgllgs.blog.service.impl.CommentService;
 import com.pblgllgs.blog.service.impl.PostService;
@@ -14,9 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import static com.pblgllgs.blog.utils.AppConstants.*;
 
@@ -59,48 +54,44 @@ public class PostController {
         return new ResponseEntity<>(postService.findById(id), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Get Post By Id REST API")
-    @GetMapping("/v2/{id}")
-    public ResponseEntity<PostDtoV2> findByIdV2(@PathVariable("id") long id) {
-        PostDto postDto = postService.findById(id);
-        PostDtoV2 postDtoV2 = new PostDtoV2();
-        postDtoV2.setId(postDto.getId());
-        postDtoV2.setTitle(postDto.getTitle());
-        postDtoV2.setDescription(postDto.getDescription());
-        postDtoV2.setContent(postDto.getContent());
-        Set<CommentDto> commentDtoSet = new HashSet<>(commentService.getCommentsByPostId(id));
-        postDtoV2.setComments(commentDtoSet);
-        List<String> tags = List.of("Java", "AWS", "SpringBoot");
-        postDtoV2.setTags(tags);
-        return new ResponseEntity<>(postDtoV2, HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "Get Post By Id REST API")
-    @GetMapping(value = "/{id}", params = "version=3")
-    public ResponseEntity<PostDtoV2> findByIdV3(@PathVariable("id") long id) {
-        PostDto postDto = postService.findById(id);
-        PostDtoV2 postDtoV2 = modelMapper.map(postDto, PostDtoV2.class);
-        postDtoV2.setTags(List.of("Java", "AWS", "SpringBoot"));
-        return new ResponseEntity<>(postDtoV2, HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "Get Post By Id REST API")
-    @GetMapping(value = "/{id}", headers = "X-API-VERSION=4")
-    public ResponseEntity<PostDtoV2> findByIdV4(@PathVariable("id") long id) {
-        PostDto postDto = postService.findById(id);
-        PostDtoV2 postDtoV2 = modelMapper.map(postDto, PostDtoV2.class);
-        postDtoV2.setTags(List.of("Java", "AWS", "SpringBoot"));
-        return new ResponseEntity<>(postDtoV2, HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "Get Post By Id REST API")
-    @GetMapping(value = "/{id}", produces = "application/vnd.java.v5+json")
-    public ResponseEntity<PostDtoV2> findByIdV5(@PathVariable("id") long id) {
-        PostDto postDto = postService.findById(id);
-        PostDtoV2 postDtoV2 = modelMapper.map(postDto, PostDtoV2.class);
-        postDtoV2.setTags(List.of("Java", "AWS", "SpringBoot"));
-        return new ResponseEntity<>(postDtoV2, HttpStatus.OK);
-    }
+//    @GetMapping("/v2/{id}")
+//    public ResponseEntity<PostDtoV2> findByIdV2(@PathVariable("id") long id) {
+//        PostDto postDto = postService.findById(id);
+//        PostDtoV2 postDtoV2 = new PostDtoV2();
+//        postDtoV2.setId(postDto.getId());
+//        postDtoV2.setTitle(postDto.getTitle());
+//        postDtoV2.setDescription(postDto.getDescription());
+//        postDtoV2.setContent(postDto.getContent());
+//        Set<CommentDto> commentDtoSet = new HashSet<>(commentService.getCommentsByPostId(id));
+//        postDtoV2.setComments(commentDtoSet);
+//        List<String> tags = List.of("Java", "AWS", "SpringBoot");
+//        postDtoV2.setTags(tags);
+//        return new ResponseEntity<>(postDtoV2, HttpStatus.OK);
+//    }
+//
+//    @GetMapping(value = "/{id}", params = "version=3")
+//    public ResponseEntity<PostDtoV2> findByIdV3(@PathVariable("id") long id) {
+//        PostDto postDto = postService.findById(id);
+//        PostDtoV2 postDtoV2 = modelMapper.map(postDto, PostDtoV2.class);
+//        postDtoV2.setTags(List.of("Java", "AWS", "SpringBoot"));
+//        return new ResponseEntity<>(postDtoV2, HttpStatus.OK);
+//    }
+//
+//    @GetMapping(value = "/{id}", headers = "X-API-VERSION=4")
+//    public ResponseEntity<PostDtoV2> findByIdV4(@PathVariable("id") long id) {
+//        PostDto postDto = postService.findById(id);
+//        PostDtoV2 postDtoV2 = modelMapper.map(postDto, PostDtoV2.class);
+//        postDtoV2.setTags(List.of("Java", "AWS", "SpringBoot"));
+//        return new ResponseEntity<>(postDtoV2, HttpStatus.OK);
+//    }
+//
+//    @GetMapping(value = "/{id}", produces = "application/vnd.java.v5+json")
+//    public ResponseEntity<PostDtoV2> findByIdV5(@PathVariable("id") long id) {
+//        PostDto postDto = postService.findById(id);
+//        PostDtoV2 postDtoV2 = modelMapper.map(postDto, PostDtoV2.class);
+//        postDtoV2.setTags(List.of("Java", "AWS", "SpringBoot"));
+//        return new ResponseEntity<>(postDtoV2, HttpStatus.OK);
+//    }
 
     @ApiOperation(value = "Update Post By Id REST API")
     @PreAuthorize("hasRole('ADMIN')")
